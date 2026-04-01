@@ -49,7 +49,38 @@ void PriceLevel::removeOrderById(OrderId id){
         }
     }
 
-    if(found == false){
+    if(!found){
         throw std::invalid_argument("The order id is not found");
+    }
+}
+
+
+Order& PriceLevel::frontOrder(){
+    //In the same price level, who came first get to sell first, that's why we care about front order
+    if(orders_.empty()){
+        throw std::invalid_argument("The orders are currently empty");
+    }
+
+    return orders_.front();
+}
+const Order& PriceLevel::frontOrder() const{
+    if(orders_.empty()){
+        throw std::invalid_argument("The orders are currently empty");
+    }
+
+    return orders_.front();
+}
+
+std::list<Order>& PriceLevel::getOrders(){
+    return orders_;
+}
+const std::list<Order>& PriceLevel::getOrders() const{
+    return orders_;
+}
+
+void PriceLevel::updateTotalQuantity(){
+    totalQuantity_ = 0;
+    for (const auto& order : orders_) {
+        totalQuantity_ += order.remainingQuantity;
     }
 }
