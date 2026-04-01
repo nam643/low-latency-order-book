@@ -1,0 +1,28 @@
+#pragma once
+
+#include "common/Types.hpp"
+
+class Order {
+public:
+    OrderId id;
+    Side side;
+    OrderType type;
+    Price price;
+    Quantity quantity;
+    Quantity remainingQuantity;
+    Timestamp timestamp;
+
+    Order(OrderId id,
+      Side side,
+      OrderType type,
+      Price price,
+      Quantity quantity,
+      Timestamp timestamp);
+
+    bool isFilled() const;
+    bool isMarketOrder() const;
+    bool isLimitOrder() const;
+    void fill(Quantity qty);
+    void modifyPrice(Price newPrice);
+    void modifyQuantity(Quantity newQty);
+};
