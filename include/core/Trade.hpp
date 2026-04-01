@@ -1,5 +1,6 @@
 #include "common/Types.hpp"
 #include <iostream>
+#include <string>
 
 class Trade {
 public:
