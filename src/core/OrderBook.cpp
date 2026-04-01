@@ -36,3 +36,12 @@ const PriceLevel* OrderBook::getBestAskLevel() const{
     }
     return &asks_.begin()->second;
 }
+
+//matching order
+bool OrderBook::canMatch(const Order& incoming) const{
+    if(incoming.side == Side::Buy){
+        if(asks_.empty()) return false;
+        if(incoming.type == OrderType::Limit) return true;
+        return asks_.begin()->first <= incoming.price;
+    }
+}
