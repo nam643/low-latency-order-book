@@ -19,10 +19,10 @@ public:
       Quantity quantity,
       Timestamp timestamp);
 
-    bool isFilled() const;
+    bool isFilled() const; //is our stock empty
     bool isMarketOrder() const;
     bool isLimitOrder() const;
-    void fill(Quantity qty);
+    void fill(Quantity qty); //trade a quantity
     void modifyPrice(Price newPrice);
     void modifyQuantity(Quantity newQty);
 };
