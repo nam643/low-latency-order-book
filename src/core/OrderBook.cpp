@@ -160,3 +160,15 @@ bool OrderBook::canMatch(const Order& incoming) const{
 
     return false;
 }
+
+Price OrderBook::getBestOpposingPrice(Side incomingSide) const{
+    if(incomingSide == Side::Buy){
+        return getBestAsk();
+    }
+    else if(incomingSide == Side::Sell){
+        return getBestBid();
+    }
+
+    throw std::invalid_argument("Invalid incoming side");
+}
+
