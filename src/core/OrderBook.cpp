@@ -109,14 +109,14 @@ bool OrderBook::modifyOrder(OrderId id, Price newPrice, Quantity newQty, Timesta
 bool OrderBook::canMatch(const Order& incoming) const{
     if(incoming.side == Side::Buy){
         if(asks_.empty()) return false;
-        if(incoming.type == OrderType::Limit) return true;
+        if(incoming.type == OrderType::Market) return true;
         //to make profit
         //only buy when the asked price is lower
         return asks_.begin()->first <= incoming.price;
     }
     if(incoming.side == Side::Sell){
         if(bids_.empty()) return false;
-        if(incoming.type == OrderType::Limit) return true;
+        if(incoming.type == OrderType::Market) return true;
         //to make profit
         //only sell when the bids price is larger
         return bids_.begin()->first >= incoming.price;
