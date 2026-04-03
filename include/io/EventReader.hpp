@@ -10,4 +10,4 @@ public:
     bool hasNext() const;
     Event next();
     std::vector<Event> readAll();
-}
+};
