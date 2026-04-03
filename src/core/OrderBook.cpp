@@ -83,6 +83,7 @@ bool OrderBook::addOrder(const Order& order){
 
     return false;
 }
+
 bool OrderBook::cancelOrder(OrderId id){
     auto indexIt = orderIndex_.find(id);
     if(indexIt == orderIndex_.end()) return false;
@@ -117,6 +118,26 @@ bool OrderBook::cancelOrder(OrderId id){
 
     orderIndex_.erase(indexIt);
     return true;
+}
+
+bool OrderBook::modifyOrder(OrderId id, Price newPrice, Quantity newQty, Timestamp newTimestamp){
+    auto indexIt = orderIndex_.find(id);
+    if(indexIt == orderIndex_.end()) return false;
+
+    if(newQty <= 0) return false;
+    
+    const OrderLocation& loc = indexIt->second;
+
+    Order oldOrder = *(loc.orderIt);
+
+    if(!cancelOrder(id)) return false;
+
+    oldOrder.price = newPrice;
+    oldOrder.quantity = newQty;
+    oldOrder.remainingQuantity = newQty;
+    oldOrder.timestamp = newTimestamp;
+
+    return addOrder(oldOrder);
 }
 
 
