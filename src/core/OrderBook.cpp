@@ -1,5 +1,6 @@
 #include "../../include/core/OrderBook.hpp"
 #include <stdexcept>
+#include <iostream>
 
 bool OrderBook::hasOrder(OrderId id) const{
     return (orderIndex_.find(id) != orderIndex_.end());
@@ -228,4 +229,79 @@ void OrderBook::removeEmptyPriceLevel(Side side, Price price){
             asks_.erase(it);
         }
     }
+}
+
+std::vector<std::pair<Price, Quantity>> OrderBook::getBidDepth(std::size_t levels) const {
+    std::vector<std::pair<Price, Quantity>> depth;
+    std::size_t count = 0;
+
+    for (const auto& [price, level] : bids_) {
+        if (count >= levels) {
+            break;
+        }
+
+        depth.push_back({price, level.getTotalQuantity()});
+        ++count;
+    }
+
+    return depth;
+}
+
+std::vector<std::pair<Price, Quantity>> OrderBook::getAskDepth(std::size_t levels) const {
+    std::vector<std::pair<Price, Quantity>> depth;
+    std::size_t count = 0;
+
+    for (const auto& [price, level] : asks_) {
+        if (count >= levels) {
+            break;
+        }
+
+        depth.push_back({price, level.getTotalQuantity()});
+        ++count;
+    }
+
+    return depth;
+}
+
+//display
+std::string OrderBook::toString(std::size_t depth) const {
+    std::string result = "----- ORDER BOOK -----\n";
+    result += "ASKS:\n";
+
+    auto askDepth = getAskDepth(depth);
+    for (const auto& [price, qty] : askDepth) {
+        result += std::to_string(price) + " x " + std::to_string(qty) + "\n";
+    }
+
+    result += "\nBIDS:\n";
+
+    auto bidDepth = getBidDepth(depth);
+    for (const auto& [price, qty] : bidDepth) {
+        result += std::to_string(price) + " x " + std::to_string(qty) + "\n";
+    }
+
+    result += "----------------------\n";
+    return result;
+}
+
+void OrderBook::printTopOfBook() const {
+    std::cout << "TOP OF BOOK: ";
+
+    if (!bids_.empty()) {
+        std::cout << "BID " << bids_.begin()->first
+                  << " x " << bids_.begin()->second.getTotalQuantity();
+    } else {
+        std::cout << "BID EMPTY";
+    }
+
+    std::cout << " | ";
+
+    if (!asks_.empty()) {
+        std::cout << "ASK " << asks_.begin()->first
+                  << " x " << asks_.begin()->second.getTotalQuantity();
+    } else {
+        std::cout << "ASK EMPTY";
+    }
+
+    std::cout << "\n";
 }
