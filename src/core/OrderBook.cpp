@@ -80,7 +80,45 @@ bool OrderBook::addOrder(const Order& order){
         orderIndex_[order.id] = {order.side, order.price, orderIt};
         return true;
     }
+
+    return false;
 }
+bool OrderBook::cancelOrder(OrderId id){
+    auto indexIt = orderIndex_.find(id);
+    if(indexIt == orderIndex_.end()) return false;
+
+    const OrderLocation& loc = indexIt->second;
+
+    if(loc.side == Side::Buy){
+        auto levelIt = bids_.find(loc.price);
+        if(levelIt == bids_.end()) return false;
+
+        levelIt->second.getOrders().erase(loc.orderIt);
+        levelIt->second.updateTotalQuantity();
+
+        if(levelIt->second.empty()){
+            bids_.erase(levelIt);
+        }
+    }
+    else if(loc.side == Side::Sell){
+        auto levelIt = asks_.find(loc.price);
+        if(levelIt == asks_.end()) return false;
+
+        levelIt->second.getOrders().erase(loc.orderIt);
+        levelIt->second.updateTotalQuantity();
+
+        if(levelIt->second.empty()){
+            asks_.erase(levelIt);
+        }
+    }
+    else{
+        return false;
+    }
+
+    orderIndex_.erase(indexIt);
+    return true;
+}
+
 
 //matching order
 bool OrderBook::canMatch(const Order& incoming) const{
@@ -98,4 +136,6 @@ bool OrderBook::canMatch(const Order& incoming) const{
         //only sell when the bids price is larger
         return bids_.begin()->first >= incoming.price;
     }
+
+    return false;
 }
