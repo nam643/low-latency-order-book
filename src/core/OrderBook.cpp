@@ -172,3 +172,40 @@ Price OrderBook::getBestOpposingPrice(Side incomingSide) const{
     throw std::invalid_argument("Invalid incoming side");
 }
 
+PriceLevel& OrderBook::getBestOpposingLevel(Side incomingSide){
+    if(incomingSide == Side::Buy){
+        if(asks_.empty()){
+            throw std::invalid_argument("No opposing ask level");
+        }
+
+        return asks_.begin()->second;
+    }
+    else if(incomingSide == Side::Sell){
+        if(bids_.empty()){
+            throw std::invalid_argument("No opposing bid level");
+        }
+
+        return bids_.begin()->second;
+    }
+
+    throw std::invalid_argument("Invalid incoming side");
+}
+
+const PriceLevel& OrderBook::getBestOpposingLevel(Side incomingSide) const{
+    if(incomingSide == Side::Buy){
+        if(asks_.empty()){
+            throw std::invalid_argument("No opposing ask level");
+        }
+
+        return asks_.begin()->second;
+    }
+    else if(incomingSide == Side::Sell){
+        if(bids_.empty()){
+            throw std::invalid_argument("No opposing bid level");
+        }
+
+        return bids_.begin()->second;
+    }
+
+    throw std::invalid_argument("Invalid incoming side");
+}
