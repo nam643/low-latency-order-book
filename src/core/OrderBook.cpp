@@ -44,43 +44,13 @@ bool OrderBook::addOrder(const Order& order){
     if(order.quantity <= 0) return false;
 
     if(order.side == Side::Buy){
-        //find if the price level already exists
-        auto levelIt = bids_.find(order.price);
-        if(levelIt == bids_.end()){
-            bids_.emplace(order.price, PriceLevel(order.price));
-            levelIt = bids_.find(order.price);
-        }
-
-        levelIt->second.addOrder(order);
-
-        auto orderIt = levelIt->second.getOrders().end();
-        --orderIt;
-
-
-        //orderIt is used for fast searching, in case we want to remove it
-        orderIndex_[order.id] = {order.side, order.price, orderIt};
-
+        addToBidBook(order);
         return true;
     }
     else if(order.side == Side::Sell){
-        //find if the price level already exists
-        auto levelIt = asks_.find(order.price);
-        if(levelIt == asks_.end()){
-            asks_.emplace(order.price, PriceLevel(order.price));
-            levelIt = asks_.find(order.price);
-        }
-
-        levelIt->second.addOrder(order);
-
-        auto orderIt = levelIt->second.getOrders().end();
-        --orderIt;
-
-
-        //orderIt is used for fast searching, in case we want to remove it
-        orderIndex_[order.id] = {order.side, order.price, orderIt};
+        addToAskBook(order);
         return true;
     }
-
     return false;
 }
 
@@ -96,10 +66,6 @@ bool OrderBook::cancelOrder(OrderId id){
 
         levelIt->second.getOrders().erase(loc.orderIt);
         levelIt->second.updateTotalQuantity();
-
-        if(levelIt->second.empty()){
-            bids_.erase(levelIt);
-        }
     }
     else if(loc.side == Side::Sell){
         auto levelIt = asks_.find(loc.price);
@@ -107,16 +73,13 @@ bool OrderBook::cancelOrder(OrderId id){
 
         levelIt->second.getOrders().erase(loc.orderIt);
         levelIt->second.updateTotalQuantity();
-
-        if(levelIt->second.empty()){
-            asks_.erase(levelIt);
-        }
     }
     else{
         return false;
     }
 
-    orderIndex_.erase(indexIt);
+    removeEmptyPriceLevel(loc.side, loc.price);
+    removeOrderFromIndex(id);
     return true;
 }
 
@@ -208,4 +171,61 @@ const PriceLevel& OrderBook::getBestOpposingLevel(Side incomingSide) const{
     }
 
     throw std::invalid_argument("Invalid incoming side");
+}
+
+//add and remove
+void OrderBook::addToBidBook(const Order& order){
+    if (order.side != Side::Buy) {
+        throw std::invalid_argument("Order is not a buy order");
+    }
+
+    auto levelIt = bids_.find(order.price);
+    if (levelIt == bids_.end()) {
+        bids_.emplace(order.price, PriceLevel(order.price));
+        levelIt = bids_.find(order.price);
+    }
+
+    levelIt->second.addOrder(order);
+
+    auto orderIt = levelIt->second.getOrders().end();
+    --orderIt;
+
+    orderIndex_[order.id] = {order.side, order.price, orderIt};
+}
+
+void OrderBook::addToAskBook(const Order& order){
+    if (order.side != Side::Sell) {
+        throw std::invalid_argument("Order is not a buy order");
+    }
+
+    auto levelIt = asks_.find(order.price);
+    if (levelIt == asks_.end()) {
+        asks_.emplace(order.price, PriceLevel(order.price));
+        levelIt = asks_.find(order.price);
+    }
+
+    levelIt->second.addOrder(order);
+
+    auto orderIt = levelIt->second.getOrders().end();
+    --orderIt;
+
+    orderIndex_[order.id] = {order.side, order.price, orderIt};
+}
+
+void OrderBook::removeOrderFromIndex(OrderId id){
+    orderIndex_.erase(id);
+}
+void OrderBook::removeEmptyPriceLevel(Side side, Price price){
+    if (side == Side::Buy) {
+        auto it = bids_.find(price);
+        if (it != bids_.end() && it->second.empty()) {
+            bids_.erase(it);
+        }
+    }
+    else if (side == Side::Sell) {
+        auto it = asks_.find(price);
+        if (it != asks_.end() && it->second.empty()) {
+            asks_.erase(it);
+        }
+    }
 }
