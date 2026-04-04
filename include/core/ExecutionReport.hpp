@@ -7,8 +7,8 @@
 class ExecutionReport {
 public:
     std::vector<Trade> trades;
-    bool accepted;
-    std::string message;
+    bool accepted = false;
+    std::string message = "";
 
     void addTrade(const Trade& trade);
     void setAccepted(bool value);
