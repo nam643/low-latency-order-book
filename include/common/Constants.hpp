@@ -1,3 +1,4 @@
+#pragma once
 #include "Types.hpp"
 
 constexpr Price INVALID_PRICE = -1;
