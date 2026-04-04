@@ -26,7 +26,7 @@ public:
     MatchingEngine();
     ExecutionReport processAddOrder(const Order& incoming);
     ExecutionReport processCancelOrder(OrderId id);
-    ExecutionReport processModifyOrder(Order id, Price newPrice, Quantity newQty);
+    ExecutionReport processModifyOrder(OrderId id, Price newPrice, Quantity newQty);
     ExecutionReport processEvent(const Event& event);
     
     const OrderBook& getOrderBook() const;
