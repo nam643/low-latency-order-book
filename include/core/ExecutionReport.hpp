@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string>
-#include "core/Trade.hpp"
+#include "Trade.hpp"
 
 class ExecutionReport {
 public:

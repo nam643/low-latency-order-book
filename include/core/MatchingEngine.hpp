@@ -1,7 +1,8 @@
+#pragma once
 #include "OrderBook.hpp"
 #include "ExecutionReport.hpp"
 #include "Trade.hpp"
-#include "io/Event.hpp"
+#include "../io/Event.hpp"
 
 class MatchingEngine{
 private:

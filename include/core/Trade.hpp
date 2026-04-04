@@ -1,4 +1,5 @@
-#include "common/Types.hpp"
+#pragma once
+#include "../common/Types.hpp"
 #include <iostream>
 #include <string>
 

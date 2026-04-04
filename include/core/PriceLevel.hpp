@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common/Types.hpp"
-#include "core/Order.hpp"
+#include "../common/Types.hpp"
+#include "Order.hpp"
 #include <cstddef>
 #include <list>
 
