@@ -1,7 +1,7 @@
 #pragma once
 
 //Reads a CSV row and turns it into an Event
-#include "io/Event.hpp"
+#include "Event.hpp"
 #include <vector>
 #include <string>
 

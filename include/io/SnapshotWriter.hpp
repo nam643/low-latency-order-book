@@ -2,8 +2,8 @@
 
 #include<string>
 #include<vector>
-#include "core/OrderBook.hpp"
-#include "core/Trade.hpp"
+#include "../core/OrderBook.hpp"
+#include "../core/Trade.hpp"
 
 class SnapshotWriter{
 public:
