@@ -1,30 +1,42 @@
 #include <iostream>
+#include <vector>
 #include "../include/core/MatchingEngine.hpp"
-#include "../include/core/Order.hpp"
+#include "../include/io/EventReader.hpp"
+#include "../include/io/SnapshotWriter.hpp"
 
-int main(){
-    MatchingEngine engine;
+int main() {
+    try {
+        MatchingEngine engine;
+        EventReader reader("events.csv");
+        SnapshotWriter writer;
 
-    Order sell1(1, Side::Sell, OrderType::Limit, 101, 10, 1);
-    Order buy1(2, Side::Buy, OrderType::Limit, 101, 6, 2);
+        std::vector<Trade> allTrades;
 
-    ExecutionReport report1 = engine.processAddOrder(sell1);
-    std::cout << "Add sell1: " << report1.message << "\n";
+        while (reader.hasNext()) {
+            Event event = reader.next();
+            ExecutionReport report = engine.processEvent(event);
 
-    ExecutionReport report2 = engine.processAddOrder(buy1);
-    std::cout << "Add buy1: " << report2.message << "\n";
+            std::cout << report.message << "\n";
 
-    if (report2.hasTrades()) {
-        std::cout << "Trades:\n";
-        for (const auto& trade : report2.trades) {
-            std::cout << trade.toString() << "\n";
+            for (const auto& trade : report.trades) {
+                allTrades.push_back(trade);
+                std::cout << trade.toString() << "\n";
+            }
         }
-    } else {
-        std::cout << "No trades generated.\n";
-    }
 
-    std::cout << "\nFinal Order Book:\n";
-    std::cout << engine.getOrderBook().toString();
+        writer.writeBookSnapshot(engine.getOrderBook(), "final_book.txt");
+        writer.writeTrades(allTrades, "trades.txt");
+
+        std::cout << "\nFinal Order Book:\n";
+        std::cout << engine.getOrderBook().toString();
+
+        std::cout << "\nSnapshot written to final_book.txt\n";
+        std::cout << "Trades written to trades.txt\n";
+    }
+    catch (const std::exception& ex) {
+        std::cerr << "Error: " << ex.what() << "\n";
+        return 1;
+    }
 
     return 0;
 }
