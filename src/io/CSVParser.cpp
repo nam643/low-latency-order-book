@@ -76,7 +76,7 @@ Event CSVParser::parseLine(const std::string& line) const{
         event.timestamp = std::stoull(tokens[1]);
         event.orderId = std::stoull(tokens[2]);
         event.price = std::stoull(tokens[3]);
-        event.price = std::stoull(tokens[4]);
+        event.quantity = std::stoull(tokens[4]);
     }
 
     return event;
