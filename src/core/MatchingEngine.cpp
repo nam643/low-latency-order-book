@@ -146,3 +146,28 @@ void MatchingEngine::reset(){
     book_ = OrderBook();
     sequence_ = 0;
 }
+
+ExecutionReport MatchingEngine::processEvent(const Event& event){
+    if(event.isAdd()){
+        Order order(
+            event.orderId,
+            event.side,
+            event.orderType,
+            event.price,
+            event.quantity,
+            event.timestamp
+        );
+        return processAddOrder(order);
+    }
+    else if(event.isCancel()){
+        return processCancelOrder(event.orderId);
+    }
+    else if(event.isModify()){
+        return processModifyOrder(event.orderId, event.price, event.quantity);
+    }
+
+    ExecutionReport report;
+    report.setAccepted(false);
+    report.setMessage("Unknown event type");
+    return report;
+}
