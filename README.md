@@ -9,16 +9,14 @@ The goal of this project is to explore the software engineering and systems desi
 ## Table of Contents
 
 - [Overview](#overview)
+- [Visual](#visual)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [Repository Structure](#repository-structure)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Testing](#testing)
-- [Configuration](#configuration)
 - [Future Development](#future-development)
-- [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ---
@@ -37,6 +35,73 @@ This project implements the core components of an electronic exchange-style matc
 It is designed as a systems-oriented C++ project that reflects how trading infrastructure is often structured in practice: a performance-sensitive core engine, an input pipeline, analytics utilities, and a future benchmarking layer.
 
 ---
+
+## Visual
+
+### Demo Run
+```bash
+Order processed
+Order processed
+Order processed
+Order processed
+Order processed
+BUY=1005 SELL=1001 PRICE=101 QTY=5 TS=0
+Order processed
+BUY=1004 SELL=1006 PRICE=100 QTY=4 TS=1
+Order modified successfully
+Order cancelled successfully
+Order processed
+Order processed
+BUY=1008 SELL=1001 PRICE=101 QTY=5 TS=3
+BUY=1008 SELL=1007 PRICE=103 QTY=4 TS=4
+Order processed
+BUY=1004 SELL=1009 PRICE=101 QTY=6 TS=5
+Order processed
+Order processed
+BUY=1010 SELL=1011 PRICE=102 QTY=3 TS=6
+BUY=1004 SELL=1011 PRICE=101 QTY=4 TS=7
+Order modification failed
+Order processed
+Order processed
+BUY=1012 SELL=1013 PRICE=100 QTY=10 TS=9
+Order processed
+Order modified successfully
+Order processed
+Order processed
+BUY=1016 SELL=1011 PRICE=101 QTY=4 TS=11
+BUY=1016 SELL=1007 PRICE=103 QTY=3 TS=12
+Order cancelled successfully
+Order processed
+Order modified successfully
+Order processed
+BUY=1018 SELL=1017 PRICE=102 QTY=6 TS=14
+Order processed
+BUY=1012 SELL=1019 PRICE=103 QTY=5 TS=15
+BUY=1018 SELL=1019 PRICE=102 QTY=3 TS=16
+Order not found
+Order processed
+BUY=1018 SELL=1020 PRICE=102 QTY=5 TS=17
+Order processed
+Order modified successfully
+
+Final Order Book:
+----- ORDER BOOK -----
+ASKS:
+104 x 9
+
+BIDS:
+102 x 6
+101 x 12
+----------------------
+
+Snapshot written to final_book.txt
+Trades written to trades.txt
+```
+### Benchmark summary
+
+```bash
+count=10000, avg_ns=3138.46, median_ns=3000, p95_ns=7700, p99_ns=10700, min_ns=1100, max_ns=183800
+```
 
 ## Key Features
 
