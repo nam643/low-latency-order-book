@@ -80,6 +80,12 @@ void MatchingEngine::matchSellOrder(Order& incoming, ExecutionReport& report){
 
 ExecutionReport MatchingEngine::matchIncomingOrder(Order incoming){
     ExecutionReport report;
+    if(incoming.quantity == 0 || incoming.remainingQuantity == 0){
+        report.setAccepted(false);
+        report.setMessage("Order rejected");
+        return report;
+    }
+
     report.setAccepted(true);
     report.setMessage("Order processed");
 
@@ -87,7 +93,7 @@ ExecutionReport MatchingEngine::matchIncomingOrder(Order incoming){
         matchBuyOrder(incoming, report);
     }
     else if(incoming.side == Side::Sell){
-        matchSellOrder(incoming,report);
+        matchSellOrder(incoming, report);
     }
     else{
         report.setAccepted(false);
@@ -96,7 +102,10 @@ ExecutionReport MatchingEngine::matchIncomingOrder(Order incoming){
     }
 
     if(incoming.remainingQuantity > 0 && incoming.type == OrderType::Limit){
-        book_.addOrder(incoming);
+        if(!book_.addOrder(incoming)){
+            report.setAccepted(false);
+            report.setMessage("Order rejected");
+        }
     }
 
     return report;
