@@ -1,12 +1,11 @@
-#include <iostream>
-#include <string>
-#include <vector>
+#pragma once
 
-#include "../../include/common/Types.hpp"
-#include "../../include/core/OrderBook.hpp"
+#include <cstddef>
 
+#include "../common/Types.hpp"
+#include "../core/OrderBook.hpp"
 
-class BookStats{
+class BookStats {
 public:
     static Price midPrice(const OrderBook& book);
     static Price spread(const OrderBook& book);
